@@ -182,147 +182,298 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+    final horizontalPadding = screenWidth < 350 ? 12.0 : 16.0;
+    final formPadding = isSmallScreen ? 16.0 : 20.0;
+    final maxWidth = screenWidth > 500 ? 400.0 : screenWidth * 0.9;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 360),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () => Navigator.of(context).pop(),
-                        child: const Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.arrow_back_ios, size: 16, color: Color(0xFF1E88FF)),
-                              SizedBox(width: 4),
-                              Text('Back', style: TextStyle(color: Color(0xFF1E88FF), fontSize: 14)),
-                            ],
-                          ),
-                        ),
+            // Header
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 8),
+              child: Row(
+                children: [
+                  InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Padding(
+                      padding: EdgeInsets.all(6.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.arrow_back_ios, size: 16, color: Color(0xFF1E88FF)),
+                          SizedBox(width: 4),
+                          Text('Back', style: TextStyle(color: Color(0xFF1E88FF), fontSize: 14)),
+                        ],
                       ),
-                      const Expanded(child: Text('CREATE ACCOUNT', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16))),
-                      const SizedBox(width: 50),
-                    ],
+                    ),
                   ),
-                ),
+                  const Expanded(
+                    child: Text(
+                      'CREATE ACCOUNT', 
+                      textAlign: TextAlign.center, 
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)
+                    )
+                  ),
+                  const SizedBox(width: 50),
+                ],
               ),
             ),
+            // Form
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 8),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 340),
-                      child: Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(child: _buildField('firstName', 'First Name', formatters: [LengthLimitingTextInputFormatter(15), FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))])),
-                                const SizedBox(width: 10),
-                                Expanded(child: _buildField('middleName', 'Middle Name', formatters: [LengthLimitingTextInputFormatter(15), FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))])),
-                              ],
-                            ),
-                            _buildField('lastName', 'Last Name', formatters: [LengthLimitingTextInputFormatter(15), FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))]),
-                            const SizedBox(height: 6),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Expanded(child: Text('Role', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))),
-                                    const SizedBox(width: 10),
-                                    const Expanded(child: Text('Department', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))),
-                                  ],
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                  child: Container(
+                    width: maxWidth,
+                    margin: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(formPadding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Name fields - Stack vertically on small screens
+                        if (isSmallScreen) ...[
+                          _buildField('firstName', 'First Name', 
+                            formatters: [
+                              LengthLimitingTextInputFormatter(15), 
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))
+                            ]
+                          ),
+                          _buildField('middleName', 'Middle Name', 
+                            formatters: [
+                              LengthLimitingTextInputFormatter(15), 
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))
+                            ]
+                          ),
+                        ] else ...[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: _buildField('firstName', 'First Name', 
+                                  formatters: [
+                                    LengthLimitingTextInputFormatter(15), 
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))
+                                  ]
+                                )
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _buildField('middleName', 'Middle Name', 
+                                  formatters: [
+                                    LengthLimitingTextInputFormatter(15), 
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))
+                                  ]
+                                )
+                              ),
+                            ],
+                          ),
+                        ],
+                        
+                        _buildField('lastName', 'Last Name', 
+                          formatters: [
+                            LengthLimitingTextInputFormatter(15), 
+                            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))
+                          ]
+                        ),
+                        
+                        const SizedBox(height: 6),
+                        
+                        // Role and Department
+                        if (isSmallScreen) ...[
+                          // Stack vertically on small screens
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Role', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                              const SizedBox(height: 4),
+                              Container(
+                                decoration: BoxDecoration(border: Border.all(color: Colors.black26), borderRadius: BorderRadius.circular(8)),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                child: DropdownButtonFormField<String>(
+                                  value: _selectedRole,
+                                  decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
+                                  hint: const Text('Select your Role', style: TextStyle(fontSize: 11)),
+                                  items: _roles.map((r) => DropdownMenuItem(value: r, child: Text(r, style: const TextStyle(fontSize: 11)))).toList(),
+                                  onChanged: (v) => setState(() => _selectedRole = v),
+                                  isExpanded: true,
+                                  style: const TextStyle(fontSize: 11, color: Colors.black),
                                 ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(border: Border.all(color: Colors.black26), borderRadius: BorderRadius.circular(8)),
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                            child: DropdownButtonFormField<String>(
-                                              value: _selectedRole,
-                                              decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
-                                              hint: const Text('Select your Role', style: TextStyle(fontSize: 11)),
-                                              items: _roles.map((r) => DropdownMenuItem(value: r, child: Text(r, style: const TextStyle(fontSize: 11)))).toList(),
-                                              onChanged: (v) => setState(() => _selectedRole = v),
-                                              isExpanded: true,
-                                              style: const TextStyle(fontSize: 11, color: Colors.black),
-                                            ),
+                              ),
+                              SizedBox(
+                                height: 22,
+                                child: Visibility(
+                                  visible: _submitted,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8, top: 2),
+                                    child: Text(
+                                      (_selectedRole == null || _selectedRole!.isEmpty) ? 'Role is required' : '',
+                                      style: TextStyle(color: (_selectedRole == null || _selectedRole!.isEmpty) ? Colors.red : Colors.transparent, fontSize: 9),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          _buildField('department', 'Department', 
+                            formatters: [
+                              LengthLimitingTextInputFormatter(20), 
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))
+                            ]
+                          ),
+                        ] else ...[
+                          // Side by side layout for larger screens
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Expanded(child: Text('Role', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))),
+                                  const SizedBox(width: 10),
+                                  const Expanded(child: Text('Department', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(border: Border.all(color: Colors.black26), borderRadius: BorderRadius.circular(8)),
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                          child: DropdownButtonFormField<String>(
+                                            value: _selectedRole,
+                                            decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
+                                            hint: const Text('Select your Role', style: TextStyle(fontSize: 11)),
+                                            items: _roles.map((r) => DropdownMenuItem(value: r, child: Text(r, style: const TextStyle(fontSize: 11)))).toList(),
+                                            onChanged: (v) => setState(() => _selectedRole = v),
+                                            isExpanded: true,
+                                            style: const TextStyle(fontSize: 11, color: Colors.black),
                                           ),
-                                          SizedBox(
-                                            height: 22,
-                                            child: Visibility(
-                                              visible: _submitted,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 8, top: 2),
-                                                child: Text(
-                                                  (_selectedRole == null || _selectedRole!.isEmpty) ? 'Role is required' : '',
-                                                  style: TextStyle(color: (_selectedRole == null || _selectedRole!.isEmpty) ? Colors.red : Colors.transparent, fontSize: 9),
-                                                ),
+                                        ),
+                                        SizedBox(
+                                          height: 22,
+                                          child: Visibility(
+                                            visible: _submitted,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 8, top: 2),
+                                              child: Text(
+                                                (_selectedRole == null || _selectedRole!.isEmpty) ? 'Role is required' : '',
+                                                style: TextStyle(color: (_selectedRole == null || _selectedRole!.isEmpty) ? Colors.red : Colors.transparent, fontSize: 9),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 10),
-                                    Expanded(child: _buildField('department', 'Department', showLabel: false, formatters: [LengthLimitingTextInputFormatter(20), FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))])),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(child: _buildField('license', 'License Number', hint: 'Professional license number', formatters: [LengthLimitingTextInputFormatter(20), FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))])),
-                                const SizedBox(width: 10),
-                                Expanded(child: _buildField('hospitalId', 'Hospital ID', hint: 'Employee/Hospital ID', formatters: [LengthLimitingTextInputFormatter(20), FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))])),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            _buildField('email', 'Email', hint: 'Professional email', hasIcon: true, formatters: [LengthLimitingTextInputFormatter(20), FilteringTextInputFormatter.deny(RegExp(r'\s'))]),
-                            const SizedBox(height: 4),
-                            _buildField('password', 'Password', hint: 'Create password', isPassword: true),
-                            const SizedBox(height: 4),
-                            _buildField('confirmPassword', 'Confirm password', hint: 'Confirm password', isPassword: true),
-                            const SizedBox(height: 12),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 40,
-                              child: ElevatedButton(
-                                onPressed: _submitting ? null : _submit,
-                                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0B79FF), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), padding: EdgeInsets.zero),
-                                child: _submitting ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2) : const Text('Create Account', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: _buildField('department', 'Department', showLabel: false, 
+                                      formatters: [
+                                        LengthLimitingTextInputFormatter(20), 
+                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))
+                                      ]
+                                    )
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                        ],
+                        
+                        const SizedBox(height: 6),
+                        
+                        // License and Hospital ID
+                        if (isSmallScreen) ...[
+                          _buildField('license', 'License Number', hint: 'Professional license number', 
+                            formatters: [
+                              LengthLimitingTextInputFormatter(20), 
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))
+                            ]
+                          ),
+                          _buildField('hospitalId', 'Hospital ID', hint: 'Employee/Hospital ID', 
+                            formatters: [
+                              LengthLimitingTextInputFormatter(20), 
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))
+                            ]
+                          ),
+                        ] else ...[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: _buildField('license', 'License Number', hint: 'Professional license number', 
+                                  formatters: [
+                                    LengthLimitingTextInputFormatter(20), 
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))
+                                  ]
+                                )
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _buildField('hospitalId', 'Hospital ID', hint: 'Employee/Hospital ID', 
+                                  formatters: [
+                                    LengthLimitingTextInputFormatter(20), 
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]'))
+                                  ]
+                                )
+                              ),
+                            ],
+                          ),
+                        ],
+                        
+                        const SizedBox(height: 6),
+                        _buildField('email', 'Email', hint: 'Professional email', hasIcon: true, 
+                          formatters: [
+                            LengthLimitingTextInputFormatter(30), 
+                            FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                          ]
                         ),
-                      ),
+                        const SizedBox(height: 4),
+                        _buildField('password', 'Password', hint: 'Create password', isPassword: true),
+                        const SizedBox(height: 4),
+                        _buildField('confirmPassword', 'Confirm password', hint: 'Confirm password', isPassword: true),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 44,
+                          child: ElevatedButton(
+                            onPressed: _submitting ? null : _submit,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0B79FF), 
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), 
+                              padding: EdgeInsets.zero,
+                              elevation: 2,
+                            ),
+                            child: _submitting 
+                              ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2) 
+                              : const Text('Create Account', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
