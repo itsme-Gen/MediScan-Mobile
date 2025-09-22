@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'pages/auth/Login.dart';
 import 'pages/auth/Create_Account.dart';
 import 'pages/dashboard/Dashboard.dart';
+<<<<<<< HEAD
 import 'pages/search/Search.dart';
 import 'pages/scan/Scan_ID.dart';
+=======
+>>>>>>> main
 
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
@@ -30,11 +33,14 @@ class MediScanApp extends StatelessWidget {
         Login.routeName: (_) => const Login(),
         CreateAccountPage.routeName: (_) => const CreateAccountPage(),
         Dashboard.routeName: (_) => const Dashboard(),
+<<<<<<< HEAD
         SearchPage.routeName: (_) => const SearchPage(),
         ScanIDPage.routeName: (_) => const ScanIDPage(),
         // Future routes
         '/records': (_) => const Placeholder(),
         '/assistant': (_) => const Placeholder(),
+=======
+>>>>>>> main
       },
     );
   }
