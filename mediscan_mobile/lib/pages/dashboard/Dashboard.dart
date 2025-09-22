@@ -1,10 +1,7 @@
 // lib/pages/dashboard/Dashboard.dart
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import '../search/Search.dart';
 import '../scan/Scan_ID.dart';
-=======
->>>>>>> main
 
 class Dashboard extends StatefulWidget {
   static const routeName = '/dashboard';
@@ -74,7 +71,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-<<<<<<< HEAD
   Widget _drawerItem(IconData icon, String label, String route) {
     final selected = _selectedItem == label;
     return InkWell(
@@ -87,16 +83,6 @@ class _DashboardState extends State<Dashboard> {
             _selectedItem = label;
           });
         }
-=======
-  Widget _drawerItem(IconData icon, String label) {
-    final selected = _selectedItem == label;
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedItem = label;
-        });
-        Navigator.of(context).pop();
->>>>>>> main
       },
       child: Container(
         color: selected ? const Color(0xFF0B79FF) : Colors.transparent,
@@ -126,19 +112,11 @@ class _DashboardState extends State<Dashboard> {
           children: [
             _buildDrawerHeader(context),
             const Divider(height: 1, color: Colors.black12),
-<<<<<<< HEAD
             _drawerItem(Icons.home_outlined, 'Dashboard', Dashboard.routeName),
             _drawerItem(Icons.camera_alt_outlined, 'Scan ID', ScanIDPage.routeName),
             _drawerItem(Icons.search, 'Search', SearchPage.routeName),
             _drawerItem(Icons.folder_open_outlined, 'Records', '/records'),
             _drawerItem(Icons.chat_bubble_outline, 'Assistant', '/assistant'),
-=======
-            _drawerItem(Icons.home_outlined, 'Dashboard'),
-            _drawerItem(Icons.camera_alt_outlined, 'Scan ID'),
-            _drawerItem(Icons.search, 'Search'),
-            _drawerItem(Icons.folder_open_outlined, 'Records'),
-            _drawerItem(Icons.chat_bubble_outline, 'Assistant'),
->>>>>>> main
             const Spacer(),
             InkWell(
               onTap: () {
