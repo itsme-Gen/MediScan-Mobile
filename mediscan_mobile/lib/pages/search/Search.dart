@@ -1,7 +1,7 @@
 // lib/pages/search/Search.dart
 import 'package:flutter/material.dart';
 import '../dashboard/dashboard.dart';
-import '../scan/scan_id.dart';
+import '../scan/Scan_ID.dart';
 
 class SearchPage extends StatefulWidget {
   static const routeName = '/search';
@@ -15,6 +15,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final String _selectedItem = 'Search';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget _buildDrawerHeader(BuildContext context) {
     return Container(
@@ -77,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
       onTap: () {
         Navigator.of(context).pop();
         if (route != SearchPage.routeName) {
-          Navigator.of(context).pushReplacementNamed(route);
+          Navigator.of(context).pushNamed(route);
         }
       },
       child: Container(
@@ -116,7 +117,7 @@ class _SearchPageState extends State<SearchPage> {
             const Spacer(),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushReplacementNamed('/');
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 16),
@@ -166,138 +167,152 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      drawer: _buildDrawer(context),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        centerTitle: false,
-        leading: Builder(builder: (ctx) {
-          return IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black87),
-            onPressed: () => Scaffold.of(ctx).openDrawer(),
-            tooltip: 'Open menu',
-          );
-        }),
-        titleSpacing: 0,
-        title: Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF0B79FF),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
+    return WillPopScope(
+      onWillPop: () async {
+        // If drawer is open, close it
+        if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+          Navigator.of(context).pop();
+          return false;
+        } else {
+          // If drawer is closed, open it
+          _scaffoldKey.currentState?.openDrawer();
+          return false;
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: const Color(0xFFF7F8FA),
+        drawer: _buildDrawer(context),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          centerTitle: false,
+          leading: Builder(builder: (ctx) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.black87),
+              onPressed: () => Scaffold.of(ctx).openDrawer(),
+              tooltip: 'Open menu',
+            );
+          }),
+          titleSpacing: 0,
+          title: Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0B79FF),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
+                ),
+                child: Image.asset(
+                  'assets/images/mediscanapp_logo.png',
+                  width: 18,
+                  height: 18,
+                  color: Colors.white,
+                  fit: BoxFit.contain,
+                ),
               ),
-              child: Image.asset(
-                'assets/images/mediscanapp_logo.png',
-                width: 18,
-                height: 18,
-                color: Colors.white,
-                fit: BoxFit.contain,
-              ),
-            ),
-            const Text('MediScan', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w700)),
-          ],
+              const Text('MediScan', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w700)),
+            ],
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Smart Search',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Use natural language to search\nthrough patient records and medical data',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 40),
-                  const Text(
-                    'AI-Powered Medical Search',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      style: const TextStyle(fontSize: 16),
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 16,
-                        ),
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.grey[600],
-                            size: 24,
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Smart Search',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black87,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Try these sample queries:',
+                    const SizedBox(height: 12),
+                    Text(
+                      'Use natural language to search\nthrough patient records and medical data',
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700],
+                        color: Colors.grey[600],
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 40),
+                    const Text(
+                      'AI-Powered Medical Search',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        style: const TextStyle(fontSize: 16),
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 16,
+                          ),
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.search,
+                              color: Colors.grey[600],
+                              size: 24,
+                            ),
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  _sampleQueryButton('"Show me all diabetic patients"'),
-                  _sampleQueryButton('"Who had surgery last year?"'),
-                  _sampleQueryButton('"Patients with high blood pressure"'),
-                  _sampleQueryButton('"Find recent emergency visits"'),
-                  _sampleQueryButton('"Show elderly patients with heart conditions"'),
-                  const SizedBox(height: 40),
-                ],
+                    const SizedBox(height: 32),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Try these sample queries:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _sampleQueryButton('"Show me all diabetic patients"'),
+                    _sampleQueryButton('"Who had surgery last year?"'),
+                    _sampleQueryButton('"Patients with high blood pressure"'),
+                    _sampleQueryButton('"Find recent emergency visits"'),
+                    _sampleQueryButton('"Show elderly patients with heart conditions"'),
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
             ),
           ),

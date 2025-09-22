@@ -63,11 +63,6 @@ flutter:
     - assets/images/apple_logo.png
     - assets/images/google_logo.png
     - assets/images/mediscanapp_logo.png
-    - assets/images/camera_icon.png
-    - assets/images/image_icon.png
-    - assets/images/upload_icon.png
-    - assets/images/lightning_icon.png
-    - assets/images/exclamation_point_icon.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
