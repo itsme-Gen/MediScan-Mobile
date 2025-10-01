@@ -34,9 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-
-  # Image picker for camera/gallery access (frontend-only)
-  image_picker: ^0.8.7+10
+  image_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -63,11 +61,7 @@ flutter:
     - assets/images/apple_logo.png
     - assets/images/google_logo.png
     - assets/images/mediscanapp_logo.png
-    - assets/images/camera_icon.png
-    - assets/images/image_icon.png
-    - assets/images/upload_icon.png
-    - assets/images/lightning_icon.png
-    - assets/images/exclamation_point_icon.png
+    
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -98,3 +92,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  
